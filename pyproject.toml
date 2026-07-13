@@ -1,0 +1,66 @@
+[project]
+name = "restaurante-codex"
+version = "1.0.0"
+description = "Um restaurante que ensina engenharia de software — os princípios do Codex, na prática, com Python e asyncio."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = ["pyright>=1.1.390", "pytest>=8.3.0", "pytest-asyncio>=0.24.0", "ruff>=0.15.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/restaurante"]
+
+# ── Ruff: formatter + linter, select = ALL (regra do Eduardo) ──────────────────
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+# Ignores explícitos e documentados — o único jeito aceitável de mexer no ALL.
+ignore = [
+    # Conflitam com o formatter (recomendação oficial do ruff):
+    "COM812", "ISC001",
+    # Conflito de convenção de docstring (escolhemos D213/D211 implicitamente):
+    "D203", "D213",
+    # Texto em pt-BR usa acentos e travessões "—": não são unicode ambíguo, é português:
+    "RUF001", "RUF002", "RUF003",
+    # Mensagens de exceção legíveis inline ensinam melhor que variável extra:
+    "EM101", "EM102", "TRY003",
+    # Repo educativo: TODOs e comentários explicativos são o produto, não dívida:
+    "TD002", "TD003", "FIX002",
+    # Import só-de-tipo: preferimos import explícito no topo ao "dance" de
+    # `if TYPE_CHECKING:` — mais legível pra ensinar, e com `from __future__ import
+    # annotations` não há custo em runtime de qualquer forma:
+    "TC001", "TC002", "TC003",
+    # Exceções em pt-BR usam "Erro"/descrição, não o sufixo inglês "Error":
+    "N818",
+    # Docstring em dunder e em __init__ é ruído — a docstring da classe já cobre:
+    "D105", "D107",
+    # D401 (modo imperativo) só entende inglês; "Persiste"/"Cobra" são imperativos pt-BR:
+    "D401",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Camada de apresentação/adaptadores pode imprimir — é o trabalho dela:
+"demo.py" = ["T201", "INP001"]
+"src/restaurante/adaptadores/notificador_console.py" = ["T201"]
+# Testes: assert é a ferramenta, valores mágicos e sem-docstring são idiomáticos:
+"tests/*" = ["S101", "PLR2004", "D100", "D103", "ANN201", "INP001"]
+
+[tool.pyright]
+include = ["src", "tests", "demo.py"]
+pythonVersion = "3.13"
+typeCheckingMode = "strict"
+reportMissingTypeStubs = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
