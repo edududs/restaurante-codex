@@ -7,6 +7,12 @@
 Não é um framework. É um **objeto de estudo executável**: você roda, lê, quebra de
 propósito, e sente cada conceito em vez de decorá-lo.
 
+![Demonstração da cozinha assíncrona preparando pedidos concorrentes, com timestamps reais](assets/demo.gif)
+
+> A cozinha prepara pratos em paralelo (`asyncio.gather`), mas cada estação é um recurso
+> limitado (`asyncio.Semaphore`) — repare nos timestamps: o Hambúrguer só entra na chapa
+> depois que o Filé sai.
+
 ```bash
 uv sync                    # cria o ambiente e instala as ferramentas
 uv run python demo.py      # roda a simulação narrada (comece por aqui)
