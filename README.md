@@ -16,7 +16,8 @@ propósito, e sente cada conceito em vez de decorá-lo.
 ```bash
 uv sync                    # cria o ambiente e instala as ferramentas
 uv run python demo.py      # a cozinha assíncrona (comece por aqui)
-uv run python demo_sim.py  # a simulação "Sims": NPCs, times, beats e timeline
+uv run python demo_sim.py  # a simulação "Sims" em modo log (Rich)
+uv run python demo_tui.py  # a simulação em dashboard ao vivo (Textual)
 uv run pytest              # a suíte de testes
 uv run ruff check .        # linter (regra ALL)
 uv run pyright             # type checker estrito
@@ -35,10 +36,21 @@ sofreu um imprevisto. Tudo **determinístico por `seed`** (mesma seed → mesma 
 ![Simulação Sims: NPCs preparando pedidos com beats, timeline e stats por pessoa](assets/demo_sim.gif)
 
 Quem faz o quê emerge dos **times** e suas responsabilidades; ao longo do turno os NPCs
-**cansam e evoluem**. Ao final, uma **timeline** de quem fez o quê e uma **tabela de stats**
-por NPC (tarefas, tempo, XP, eventos, energia, humor — e a história de cada um). O motor é
-puro e determinístico (`planejar_turno`); o Rich é só a pele. Detalhes em
-[`docs/07-simulacao-sims.md`](docs/07-simulacao-sims.md).
+**cansam e evoluem**. Cada micro-evento é narrado com **quem** o viveu (acima, o modo log).
+
+### Dois modos, a mesma porta
+
+O motor emite `SimEvent`s por uma porta (`Apresentador`); **quem desenha é um adapter
+trocável** — o motor não muda. Há dois:
+
+- **`demo_sim.py`** — modo *log* (Rich): o stream acima, ótimo pra ler a história do turno.
+- **`demo_tui.py`** — **dashboard ao vivo** (Textual): equipe, estações, feed e pedidos
+  atualizando em tempo real. Rode `uv run python demo_tui.py`.
+
+![Dashboard ao vivo (Textual): equipe com energia/humor, estações, feed de eventos e pedidos](assets/demo_tui.svg)
+
+O motor é puro e determinístico (`planejar_turno`); Rich **e** Textual são só peles sobre
+a mesma porta. Detalhes em [`docs/07-simulacao-sims.md`](docs/07-simulacao-sims.md).
 
 ---
 
