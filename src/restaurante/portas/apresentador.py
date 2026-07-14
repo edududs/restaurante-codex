@@ -63,12 +63,14 @@ class BeatOcorreu:
 
 @dataclass(frozen=True, slots=True)
 class TarefaConcluida:
-    """Um item ficou pronto; carrega o breakdown do tempo (o 'porquê')."""
+    """Um item ficou pronto; carrega o breakdown do tempo e o estado pós-tarefa do NPC."""
 
     t: float
     pessoa: str
     item: str
     duracao: DuracaoTarefa
+    energia: int
+    humor: Humor
 
 
 @dataclass(frozen=True, slots=True)

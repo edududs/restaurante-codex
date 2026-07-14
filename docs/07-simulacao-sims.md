@@ -55,6 +55,35 @@ o mesmo `seed`, o mesmo turno acontece byte-a-byte, sempre.
   `tests/test_sim_motor.py` (planejamento + replay), `tests/test_sim_rich.py` (o
   renderer, com um `Console` injetado escrevendo num `io.StringIO`).
 
+## Dois modos de ver: log (Rich) e dashboard ao vivo (Textual)
+
+A Fase 3 deu o turno uma pele Rich em stream (log). A Fase 4 adiciona uma SEGUNDA pele,
+`src/restaurante/adaptadores/apresentador_textual.py` — `SimuladorApp`, um dashboard
+Textual de tela cheia com painéis vivos (Equipe, Estações, Pedidos) e um feed rolante —
+sem tocar em uma linha do motor, do domínio ou da porta `Apresentador`. As duas peles
+são **adapters da mesma porta**: cada uma implementa `emitir(evento: SimEvent) -> None`
+com um `match` exaustivo sobre a mesma união fechada de 6 eventos; o motor
+(`servicos/motor.py`) nunca soube — e continua não sabendo — se o resultado vira texto
+rolando no terminal ou widgets numa TUI. É a promessa de Ports & Adapters cumprida de
+novo: trocar a pele é trocar o adapter, não refatorar a simulação.
+
+- **Modo log**: `uv run python demo_sim.py` — `ApresentadorRich`, stream de blocos +
+  timeline/Gantt e stats ao final, tudo em `rich.console.Console.print`.
+- **Modo dashboard**: `uv run python demo_tui.py` — `SimuladorApp`, o mesmo
+  `planejar_turno` + `reproduzir`, agora desenhando ao vivo: barra de energia e humor por
+  NPC, quem ocupa cada estação, o feed de beats/tarefas rolando, e o estado de cada
+  pedido (preparando → pronto). A App implementa a porta `Apresentador` diretamente
+  (`SimuladorApp.emitir`) e dispara `reproduzir` como um *worker* no próprio event loop
+  da aplicação — por isso é seguro atualizar widgets de dentro de `emitir`, sem thread
+  nem `call_from_thread`. Ao `TurnoResumo`, o título muda para "Fim de turno" e a app se
+  fecha sozinha alguns segundos depois.
+- Ambas as peles reusam `adaptadores/narracao.py` (`frase_beat`) como a SSoT da frase de
+  cada beat — mudar como um beat é narrado propaga para as duas, sem duplicar a regra.
+- Teste headless: `tests/test_sim_tui.py` usa o harness `SimuladorApp().run_test()` do
+  Textual (sem terminal real) para provar que o feed e os painéis são populados e que a
+  app não crasha — o equivalente do `ApresentadorColetor`/`Console(io.StringIO())` para
+  esta pele.
+
 ## Quando aplicar
 
 Quando o "quanto tempo isso leva" não é um fato fixo do domínio, mas o resultado de

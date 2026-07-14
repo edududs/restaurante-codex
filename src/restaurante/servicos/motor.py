@@ -118,19 +118,27 @@ def planejar_turno(
             for i, beat in enumerate(beats):
                 tb = inicio + (i + 1) / (n + 1) * dur.total
                 eventos.append(BeatOcorreu(t=tb, pessoa=pessoa.nome, item=item.nome, beat=beat))
-            eventos.append(TarefaConcluida(t=fim, pessoa=pessoa.nome, item=item.nome, duracao=dur))
+            novo = aplicar_conclusao(pessoa, item.estacao, houve_evento=dur.houve_evento)
+            eventos.append(
+                TarefaConcluida(
+                    t=fim,
+                    pessoa=pessoa.nome,
+                    item=item.nome,
+                    duracao=dur,
+                    energia=novo.energia,
+                    humor=novo.humor,
+                )
+            )
 
             cursor_estacao[item.estacao] = fim
             cursor_pessoa[pid] = fim
             inicio_pedido = min(inicio_pedido, inicio)
             fim_pedido = max(fim_pedido, fim)
 
-            estado[pid] = aplicar_conclusao(pessoa, item.estacao, houve_evento=dur.houve_evento)
+            estado[pid] = novo
             tarefas[pid] += 1
             tempo[pid] += dur.total
-            xp[pid] += estado[pid].experiencia[item.estacao] - pessoa.experiencia.get(
-                item.estacao, 0
-            )
+            xp[pid] += novo.experiencia[item.estacao] - pessoa.experiencia.get(item.estacao, 0)
             if dur.houve_evento:
                 eventos_sofridos[pid] += 1
 

@@ -1,29 +1,28 @@
-"""Demo Sims — o mesmo restaurante, agora com NPCs de carne-e-beat.
+"""Demo Sims — dashboard ao vivo (Textual), a mesma simulação de demo_sim.py em tela cheia.
 
-    uv run python demo_sim.py
+    uv run python demo_tui.py
 
-Cada NPC vive *beats* (fluiu, se atrapalhou, distraiu, interagiu, sofreu um evento) que
-fazem o tempo de cada tarefa **emergir**, em vez de ser fixo. `planejar_turno` é 100%
-determinístico dada a `SEED`; troque a seed (ou uma skill em `adaptadores/elenco.py`) e
-veja o turno inteiro contar outra história.
+`demo_sim.py` narra o turno em log Rich, linha a linha; este script abre a MESMA
+simulação — mesmo `planejar_turno` puro, mesmo `reproduzir` async — só que consumida por
+`SimuladorApp`, o adapter que implementa a porta `Apresentador` como uma TUI Textual ao
+vivo (equipe, estações, feed, pedidos). O motor não sabe qual pele está ligada.
 """
 
 from __future__ import annotations
 
-import asyncio
 import io
 import sys
 
-from restaurante.adaptadores.apresentador_rich import ApresentadorRich
+from restaurante.adaptadores.apresentador_textual import SimuladorApp
 from restaurante.adaptadores.elenco import BIOS, criar_elenco
 from restaurante.adaptadores.relogio_real import RelogioReal
 from restaurante.adaptadores.situacoes_sims import SituacoesSims
 from restaurante.dominio.cardapio import Cardapio
 from restaurante.dominio.pedido import Delivery, NoLocal, ParaViagem, Pedido
-from restaurante.servicos.motor import planejar_turno, reproduzir
+from restaurante.servicos.motor import planejar_turno
 
 # Windows usa cp1252 no console por padrão e não encoda emoji/box-drawing. Reembrulhamos
-# o stdout num writer UTF-8 para a demo ficar bonita em qualquer plataforma.
+# o stdout num writer UTF-8 para o dashboard ficar bonito em qualquer plataforma.
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True)
 
 SEED = 42
@@ -50,18 +49,14 @@ def _pedidos() -> list[Pedido]:
     return [mesa, viagem, delivery]
 
 
-async def main() -> None:
-    """Planeja o turno inteiro (puro) e reproduz com ritmo real, via a pele Rich."""
-    print("\n🎬  RESTAURANTE-CODEX — a fase Sims: NPCs de verdade, tempo emergente\n")
+def main() -> None:
+    """Planeja o turno inteiro (puro) e reproduz num dashboard Textual ao vivo."""
     roster, times = criar_elenco()
     plano = planejar_turno(_pedidos(), roster, times, SituacoesSims(), seed=SEED)
-    apresentador = ApresentadorRich(bios=BIOS)
     # Ritmo didático (~1.5×): cada micro-evento "respira" e dá pra acompanhar tudo.
-    await reproduzir(plano, RelogioReal(escala=1.5), apresentador)
-    print(
-        "\n✨  Fim do turno. Troque a SEED ou uma skill em adaptadores/elenco.py e rode de novo.\n"
-    )
+    app = SimuladorApp(plano, RelogioReal(escala=1.5), BIOS, roster)
+    app.run()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

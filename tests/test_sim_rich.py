@@ -60,7 +60,11 @@ def _emitir_um_de_cada(largura: int) -> str:
             beat=Beat(TipoBeat.ATRAPALHOU, "se atrapalhou", 1.2),
         )
     )
-    apresentador.emitir(TarefaConcluida(t=6.5, pessoa="Ana", item="Hambúrguer", duracao=duracao))
+    apresentador.emitir(
+        TarefaConcluida(
+            t=6.5, pessoa="Ana", item="Hambúrguer", duracao=duracao, energia=88, humor=Humor.NEUTRO
+        )
+    )
     apresentador.emitir(PedidoPronto(t=6.5, pedido_id="p1", total_s=6.5))
     apresentador.emitir(TurnoResumo(t=6.5, npcs=(resumo,)))
 

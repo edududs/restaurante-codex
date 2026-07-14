@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "rich>=15.0.0",
+    "textual>=8.2.8",
 ]
 
 [dependency-groups]
@@ -56,12 +57,13 @@ ignore = [
 # Camada de apresentação/adaptadores pode imprimir — é o trabalho dela:
 "demo.py" = ["T201", "INP001"]
 "demo_sim.py" = ["T201", "INP001"]
+"demo_tui.py" = ["T201", "INP001"]
 "src/restaurante/adaptadores/notificador_console.py" = ["T201"]
 # Testes: assert é a ferramenta, valores mágicos e sem-docstring são idiomáticos:
 "tests/*" = ["S101", "PLR2004", "D100", "D103", "ANN201", "INP001"]
 
 [tool.pyright]
-include = ["src", "tests", "demo.py", "demo_sim.py"]
+include = ["src", "tests", "demo.py", "demo_sim.py", "demo_tui.py"]
 pythonVersion = "3.13"
 typeCheckingMode = "strict"
 reportMissingTypeStubs = false

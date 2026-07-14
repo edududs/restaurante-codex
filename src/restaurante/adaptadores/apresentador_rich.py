@@ -23,7 +23,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from restaurante.dominio.beats import TipoBeat
+from restaurante.adaptadores.narracao import frase_beat
 from restaurante.dominio.pessoas import Humor
 from restaurante.portas.apresentador import (
     BeatOcorreu,
@@ -35,16 +35,6 @@ from restaurante.portas.apresentador import (
     TarefaIniciada,
     TurnoResumo,
 )
-
-# Cor por tipo de beat — a "temperatura emocional" de cada micro-evento (SSoT de estilo).
-_COR_BEAT: dict[TipoBeat, str] = {
-    TipoBeat.CONCENTRADO: "white",
-    TipoBeat.INSPIRADO: "green",
-    TipoBeat.ATRAPALHOU: "red",
-    TipoBeat.DISTRAIU: "dim",
-    TipoBeat.INTERAGIU: "cyan",
-    TipoBeat.EVENTO: "bold magenta",
-}
 
 _COR_HUMOR: dict[Humor, str] = {
     Humor.INSPIRADO: "green",
@@ -131,9 +121,11 @@ class ApresentadorRich:
         )
 
     def _beat_ocorreu(self, evento: BeatOcorreu) -> None:
-        cor = _COR_BEAT[evento.beat.tipo]
-        delta = f"{evento.beat.delta_s:+.1f}s"
-        self._console.print(f"    [{cor}]· {evento.beat.texto} ({delta})[/{cor}]")
+        narrado = frase_beat(evento.pessoa, evento.beat)
+        if narrado is None:  # beat neutro (CONCENTRADO): não polui o feed
+            return
+        estilo, texto = narrado
+        self._console.print(f"    [{estilo}]{texto}[/{estilo}]")
 
     def _tarefa_concluida(self, evento: TarefaConcluida) -> None:
         item, inicio = self._inicio_atual.pop(evento.pessoa, (evento.item, evento.t))
