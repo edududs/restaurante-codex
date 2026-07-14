@@ -22,9 +22,10 @@ from restaurante.portas.apresentador import (
 from restaurante.servicos.modelo_tempo import DuracaoTarefa
 
 
-def test_renderer_processa_todos_os_tipos_de_evento_sem_crashar() -> None:
+def _emitir_um_de_cada(largura: int) -> str:
+    """Alimenta um evento de cada tipo de SimEvent e devolve a saída renderizada."""
     buffer = io.StringIO()
-    console = Console(file=buffer, width=100)
+    console = Console(file=buffer, width=largura)
     apresentador = ApresentadorRich(bios={"Ana": "craque da chapa"}, console=console)
 
     duracao = DuracaoTarefa(
@@ -63,5 +64,22 @@ def test_renderer_processa_todos_os_tipos_de_evento_sem_crashar() -> None:
     apresentador.emitir(PedidoPronto(t=6.5, pedido_id="p1", total_s=6.5))
     apresentador.emitir(TurnoResumo(t=6.5, npcs=(resumo,)))
 
-    saida = buffer.getvalue()
+    return buffer.getvalue()
+
+
+def test_renderer_processa_todos_os_tipos_de_evento_sem_crashar() -> None:
+    # Prova em runtime que o `match` de emitir() cobre os 6 tipos (exaustividade).
+    saida = _emitir_um_de_cada(largura=100)
     assert saida != ""
+    assert "se atrapalhou" in saida  # o stream de beats renderiza
+    assert "mesa 5" in saida  # o pedido recebido renderiza
+
+
+def test_tabela_de_stats_tem_todas_as_colunas() -> None:
+    # Discrimina remoção de coluna (Rich auto-estende, então o CABEÇALHO é o que some).
+    # Largura folgada para os títulos não quebrarem em várias linhas.
+    saida = _emitir_um_de_cada(largura=200)
+    for coluna in ("NPC", "Tarefas", "Tempo", "XP", "Eventos", "Energia", "Humor", "Bio"):
+        assert coluna in saida, f"coluna '{coluna}' sumiu da tabela de stats"
+    assert "craque da chapa" in saida  # a bio do NPC aparece
+    assert "neutro" in saida  # o humor aparece
