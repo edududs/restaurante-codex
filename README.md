@@ -15,11 +15,30 @@ propósito, e sente cada conceito em vez de decorá-lo.
 
 ```bash
 uv sync                    # cria o ambiente e instala as ferramentas
-uv run python demo.py      # roda a simulação narrada (comece por aqui)
+uv run python demo.py      # a cozinha assíncrona (comece por aqui)
+uv run python demo_sim.py  # a simulação "Sims": NPCs, times, beats e timeline
 uv run pytest              # a suíte de testes
 uv run ruff check .        # linter (regra ALL)
 uv run pyright             # type checker estrito
 ```
+
+---
+
+## A simulação "Sims" — cada NPC tem seu ritmo
+
+O `demo.py` mostra a mecânica. O **`demo_sim.py`** sobe um nível: um restaurante com
+**pessoas de verdade** (NPCs), cada uma com personalidade, energia, humor e experiência.
+O tempo de cada tarefa **emerge** de *beats* — micro-eventos que a pessoa vive enquanto
+trabalha: se atrapalhou (+tempo), fluiu (−tempo), se distraiu, trocou ideia com um colega,
+sofreu um imprevisto. Tudo **determinístico por `seed`** (mesma seed → mesma história).
+
+![Simulação Sims: NPCs preparando pedidos com beats, timeline e stats por pessoa](assets/demo_sim.gif)
+
+Quem faz o quê emerge dos **times** e suas responsabilidades; ao longo do turno os NPCs
+**cansam e evoluem**. Ao final, uma **timeline** de quem fez o quê e uma **tabela de stats**
+por NPC (tarefas, tempo, XP, eventos, energia, humor — e a história de cada um). O motor é
+puro e determinístico (`planejar_turno`); o Rich é só a pele. Detalhes em
+[`docs/07-simulacao-sims.md`](docs/07-simulacao-sims.md).
 
 ---
 
