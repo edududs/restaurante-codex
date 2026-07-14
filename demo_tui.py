@@ -17,45 +17,28 @@ from restaurante.adaptadores.apresentador_textual import SimuladorApp
 from restaurante.adaptadores.elenco import BIOS, criar_elenco
 from restaurante.adaptadores.relogio_real import RelogioReal
 from restaurante.adaptadores.situacoes_sims import SituacoesSims
-from restaurante.dominio.cardapio import Cardapio
-from restaurante.dominio.pedido import Delivery, NoLocal, ParaViagem, Pedido
+from restaurante.config.carregador import carregar_cenario
+from restaurante.portas.relogio import Relogio
 from restaurante.servicos.motor import planejar_turno
 
-# Windows usa cp1252 no console por padrão e não encoda emoji/box-drawing. Reembrulhamos
-# o stdout num writer UTF-8 para o dashboard ficar bonito em qualquer plataforma.
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True)
 
-SEED = 42
+def montar_app(relogio: Relogio | None = None) -> SimuladorApp:
+    """Monta o app do cenário (config/cenario.json). `relogio` injetável para testes.
 
-
-def _pedidos() -> list[Pedido]:
-    """Monta 3 pedidos variados, cobrindo as 4 estações (chapa/fritadeira/saladas/bar)."""
-    mesa = (
-        Pedido(consumo=NoLocal(mesa=5))
-        .com_item(Cardapio.buscar("Hambúrguer"))
-        .com_item(Cardapio.buscar("Batata frita"))
-        .com_item(Cardapio.buscar("Chopp"))
-    )
-    viagem = (
-        Pedido(consumo=ParaViagem())
-        .com_item(Cardapio.buscar("Filé"))
-        .com_item(Cardapio.buscar("Salada Caesar"))
-    )
-    delivery = (
-        Pedido(consumo=Delivery(endereco="Rua das Palmeiras, 42"))
-        .com_item(Cardapio.buscar("Onion rings"))
-        .com_item(Cardapio.buscar("Suco natural"))
-    )
-    return [mesa, viagem, delivery]
+    `escala` vem do cenário (didática, ~1.5×): cada micro-evento "respira". Sem side-effects
+    no import — importar este módulo não abre TUI nem mexe no stdout, então dá pra testá-lo.
+    """
+    seed, escala, pedidos = carregar_cenario()
+    roster, times = criar_elenco()
+    plano = planejar_turno(pedidos, roster, times, SituacoesSims(), seed=seed)
+    return SimuladorApp(plano, relogio or RelogioReal(escala=escala), BIOS, roster)
 
 
 def main() -> None:
-    """Planeja o turno inteiro (puro) e reproduz num dashboard Textual ao vivo."""
-    roster, times = criar_elenco()
-    plano = planejar_turno(_pedidos(), roster, times, SituacoesSims(), seed=SEED)
-    # Ritmo didático (~1.5×): cada micro-evento "respira" e dá pra acompanhar tudo.
-    app = SimuladorApp(plano, RelogioReal(escala=1.5), BIOS, roster)
-    app.run()
+    """Reconfigura o stdout p/ UTF-8 (Windows) e roda o dashboard Textual ao vivo."""
+    # cp1252 no console do Windows não encoda emoji/box-drawing; reembrulha em UTF-8.
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True)
+    montar_app().run()
 
 
 if __name__ == "__main__":
