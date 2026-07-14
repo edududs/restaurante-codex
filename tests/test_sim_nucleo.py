@@ -8,8 +8,9 @@ from random import Random
 import pytest
 
 from restaurante.adaptadores.situacoes_sims import SituacoesSims
+from restaurante.config.catalogo import Cardapio
 from restaurante.dominio.beats import Beat, TipoBeat
-from restaurante.dominio.cardapio import Cardapio, Estacao
+from restaurante.dominio.cardapio import Estacao
 from restaurante.dominio.pessoas import (
     AtributoInvalido,
     Humor,

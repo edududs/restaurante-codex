@@ -1,0 +1,60 @@
+{
+  "npcs": [
+    {
+      "id": "Ana",
+      "nome": "Ana",
+      "bio": "Craque da chapa: 12 anos de casa, não erra o ponto de um hambúrguer nem dormindo.",
+      "personalidade": { "foco": 85, "sociavel": 40, "disciplina": 80, "criatividade": 45 },
+      "skills": { "chapa": 92, "fritadeira": 55, "saladas": 30 }
+    },
+    {
+      "id": "Bruno",
+      "nome": "Bruno",
+      "bio": "O bar é o palco dele — sociável, puxa conversa com todo mundo enquanto tira o chopp.",
+      "personalidade": { "foco": 55, "sociavel": 90, "disciplina": 60, "criatividade": 50 },
+      "skills": { "bar": 90, "saladas": 35 }
+    },
+    {
+      "id": "Caio",
+      "nome": "Caio",
+      "bio": "Disciplinado até demais; a fritadeira nunca teve um cliente tão dedicado quanto ele.",
+      "personalidade": { "foco": 70, "sociavel": 35, "disciplina": 88, "criatividade": 30 },
+      "skills": { "fritadeira": 88, "chapa": 50 }
+    },
+    {
+      "id": "Duda",
+      "nome": "Duda",
+      "bio": "Criativa e um pouco distraída — a salada dela sempre tem um toque a mais.",
+      "personalidade": { "foco": 50, "sociavel": 60, "disciplina": 45, "criatividade": 90 },
+      "skills": { "saladas": 90, "fritadeira": 40 }
+    },
+    {
+      "id": "Eli",
+      "nome": "Eli",
+      "bio": "Novata versátil, ainda decidindo se o coração é da chapa ou da fritadeira.",
+      "personalidade": { "foco": 45, "sociavel": 55, "disciplina": 40, "criatividade": 55 },
+      "skills": { "chapa": 45, "fritadeira": 45, "saladas": 45 }
+    },
+    {
+      "id": "Fefa",
+      "nome": "Fefa",
+      "bio": "Segunda no bar, focada e discreta, cobre o Bruno nos dias de rush.",
+      "personalidade": { "foco": 75, "sociavel": 65, "disciplina": 75, "criatividade": 40 },
+      "skills": { "bar": 65, "saladas": 30 }
+    }
+  ],
+  "times": [
+    {
+      "nome": "Cozinha",
+      "membros": ["Ana", "Caio", "Duda", "Eli"],
+      "responsabilidades": ["chapa", "fritadeira", "saladas"],
+      "modo": "multitarefa"
+    },
+    {
+      "nome": "Bar",
+      "membros": ["Bruno", "Fefa"],
+      "responsabilidades": ["bar"],
+      "modo": "focado"
+    }
+  ]
+}

@@ -21,6 +21,7 @@ CODEX: DRY/SSoT — a frase de cada beat não é reinventada aqui; vem de
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import assert_never
 
 from rich.table import Table
 from rich.text import Text
@@ -178,6 +179,8 @@ class SimuladorApp(App[None]):
                 self._pedido_pronto(evento)
             case TurnoResumo():
                 self._turno_resumo(evento)
+            case _:  # pragma: no cover - guarda de exaustividade (Codex: assert_never)
+                assert_never(evento)
 
     # ── Handlers por tipo de evento ──────────────────────────────────────────
     def _pedido_recebido(self, evento: PedidoRecebido) -> None:

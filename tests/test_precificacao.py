@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from restaurante.adaptadores.precos import PrecoDeTabela, PrecoHappyHour
-from restaurante.dominio.cardapio import Cardapio
+from restaurante.config.catalogo import Cardapio
 from restaurante.dominio.dinheiro import Dinheiro
 from restaurante.dominio.pedido import NoLocal, Pedido
 from restaurante.portas.precificacao import ContextoPreco

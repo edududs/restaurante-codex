@@ -8,7 +8,8 @@ from __future__ import annotations
 
 import time
 
-from restaurante.dominio.cardapio import Cardapio, Estacao
+from restaurante.config.catalogo import Cardapio
+from restaurante.dominio.cardapio import Estacao
 from restaurante.dominio.pedido import NoLocal, Pedido
 from restaurante.servicos.cozinha import Cozinha
 

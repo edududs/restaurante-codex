@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from restaurante.dominio.cardapio import Cardapio
+from restaurante.config.catalogo import Cardapio
 from restaurante.dominio.dinheiro import Dinheiro
 from restaurante.dominio.erros import (
     ItemForaDoCardapio,

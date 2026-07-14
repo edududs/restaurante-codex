@@ -1,0 +1,28 @@
+{
+  "seed": 42,
+  "escala": 1.5,
+  "pedidos": [
+    {
+      "consumo": { "tipo": "mesa", "numero": 5 },
+      "itens": [
+        { "item": "Hambúrguer", "quantidade": 1 },
+        { "item": "Batata frita", "quantidade": 1 },
+        { "item": "Chopp", "quantidade": 1 }
+      ]
+    },
+    {
+      "consumo": { "tipo": "viagem" },
+      "itens": [
+        { "item": "Filé", "quantidade": 1 },
+        { "item": "Salada Caesar", "quantidade": 1 }
+      ]
+    },
+    {
+      "consumo": { "tipo": "delivery", "endereco": "Rua das Palmeiras, 42" },
+      "itens": [
+        { "item": "Onion rings", "quantidade": 1 },
+        { "item": "Suco natural", "quantidade": 1 }
+      ]
+    }
+  ]
+}

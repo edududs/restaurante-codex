@@ -9,7 +9,7 @@ CODEX: estado imutável + fail-fast + evolução por função pura.
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from enum import Enum
+from enum import StrEnum
 
 from restaurante.dominio.cardapio import Estacao
 from restaurante.dominio.erros import ErroDeDominio
@@ -25,7 +25,7 @@ class AtributoInvalido(ErroDeDominio):
     """Um atributo de pessoa (0–100) foi construído fora do intervalo válido."""
 
 
-class Humor(Enum):
+class Humor(StrEnum):
     """Estado de espírito do NPC — deriva da energia e realimenta as situações."""
 
     INSPIRADO = "inspirado"

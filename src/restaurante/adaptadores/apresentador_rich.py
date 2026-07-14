@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+from typing import assert_never
 
 from rich import box
 from rich.console import Console
@@ -106,6 +107,8 @@ class ApresentadorRich:
                 self._pedido_pronto(evento)
             case TurnoResumo():
                 self._turno_resumo(evento)
+            case _:  # pragma: no cover - guarda de exaustividade (Codex: assert_never)
+                assert_never(evento)
 
     # ── Durante: stream de blocos ────────────────────────────────────────────
     def _pedido_recebido(self, evento: PedidoRecebido) -> None:

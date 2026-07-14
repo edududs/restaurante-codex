@@ -1,0 +1,9 @@
+{
+  "beats": {
+    "inspirado": { "emoji": "🟢", "cor": "green" },
+    "atrapalhou": { "emoji": "🔴", "cor": "red" },
+    "distraiu": { "emoji": "💭", "cor": "dim" },
+    "interagiu": { "emoji": "💬", "cor": "cyan" },
+    "evento": { "emoji": "🔥", "cor": "magenta" }
+  }
+}

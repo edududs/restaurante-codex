@@ -12,7 +12,7 @@ from restaurante.adaptadores.apresentador_textual import SimuladorApp
 from restaurante.adaptadores.elenco import criar_elenco
 from restaurante.adaptadores.relogio_fake import RelogioFake
 from restaurante.adaptadores.situacoes_sims import SituacoesSims
-from restaurante.dominio.cardapio import Cardapio
+from restaurante.config.catalogo import Cardapio
 from restaurante.dominio.pedido import NoLocal, Pedido
 from restaurante.servicos.motor import planejar_turno
 

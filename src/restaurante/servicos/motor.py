@@ -15,6 +15,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 from random import Random
+from typing import assert_never
 
 from restaurante.dominio.cardapio import Estacao, ItemCardapio
 from restaurante.dominio.erros import ErroDeDominio
@@ -57,6 +58,8 @@ def _descreve_consumo(consumo: Consumo) -> str:
             return "para viagem"
         case Delivery(endereco):
             return f"delivery ({endereco})"
+        case _:  # pragma: no cover - guarda de exaustividade (Codex: assert_never)
+            assert_never(consumo)
 
 
 def _escolher_npc(

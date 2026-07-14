@@ -1,0 +1,51 @@
+[
+  {
+    "nome": "Hambúrguer",
+    "preco_reais": 28.0,
+    "estacao": "chapa",
+    "segundos_preparo": 6.0,
+    "categoria": "prato"
+  },
+  {
+    "nome": "Filé",
+    "preco_reais": 52.0,
+    "estacao": "chapa",
+    "segundos_preparo": 9.0,
+    "categoria": "prato"
+  },
+  {
+    "nome": "Batata frita",
+    "preco_reais": 18.0,
+    "estacao": "fritadeira",
+    "segundos_preparo": 4.0,
+    "categoria": "acompanhamento"
+  },
+  {
+    "nome": "Onion rings",
+    "preco_reais": 22.0,
+    "estacao": "fritadeira",
+    "segundos_preparo": 5.0,
+    "categoria": "acompanhamento"
+  },
+  {
+    "nome": "Salada Caesar",
+    "preco_reais": 26.0,
+    "estacao": "saladas",
+    "segundos_preparo": 3.0,
+    "categoria": "prato"
+  },
+  {
+    "nome": "Chopp",
+    "preco_reais": 12.0,
+    "estacao": "bar",
+    "segundos_preparo": 1.0,
+    "categoria": "bebida"
+  },
+  {
+    "nome": "Suco natural",
+    "preco_reais": 14.0,
+    "estacao": "bar",
+    "segundos_preparo": 2.0,
+    "categoria": "bebida"
+  }
+]

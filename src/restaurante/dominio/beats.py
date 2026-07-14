@@ -10,10 +10,10 @@ CODEX: Make Illegal States Unrepresentable + mechanism×policy.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 
-class TipoBeat(Enum):
+class TipoBeat(StrEnum):
     """A natureza de um micro-evento. O sinal do delta segue a semântica do tipo."""
 
     CONCENTRADO = "concentrado"  # ritmo normal, Δ ~ 0

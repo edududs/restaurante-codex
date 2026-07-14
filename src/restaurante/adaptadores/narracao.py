@@ -3,20 +3,17 @@
 CODEX: DRY/SSoT. O modo log (Rich) e o dashboard (Textual) descrevem o mesmo evento;
     a frase mora aqui, num lugar só. Mudar como um beat é narrado propaga para as duas
     peles. Funções puras (sem I/O) — a pele só decide onde/como pintar o texto.
+
+CODEX: PARSE, DON'T VALIDATE — a marca visual (emoji + cor) de cada `TipoBeat` não é
+    mais um dict hardcoded aqui: vem de `config/tema.json`, validado e carregado por
+    `config/carregador.py::carregar_tema()`. Trocar o tema (outro emoji, outra cor) é
+    editar o JSON — este módulo continua puro, sem pydantic e sem I/O direto.
 """
 
 from __future__ import annotations
 
+from restaurante.config.carregador import carregar_tema
 from restaurante.dominio.beats import Beat, TipoBeat
-
-# Marca visual (emoji + estilo Rich) por tipo de beat. CONCENTRADO é neutro: não narra.
-_MARCA: dict[TipoBeat, tuple[str, str]] = {
-    TipoBeat.INSPIRADO: ("🟢", "green"),
-    TipoBeat.ATRAPALHOU: ("🔴", "red"),
-    TipoBeat.DISTRAIU: ("💭", "dim"),
-    TipoBeat.INTERAGIU: ("💬", "cyan"),
-    TipoBeat.EVENTO: ("🔥", "magenta"),
-}
 
 
 def frase_beat(pessoa: str, beat: Beat) -> tuple[str, str] | None:
@@ -27,5 +24,5 @@ def frase_beat(pessoa: str, beat: Beat) -> tuple[str, str] | None:
     """
     if beat.tipo is TipoBeat.CONCENTRADO:
         return None
-    emoji, estilo = _MARCA[beat.tipo]
+    emoji, estilo = carregar_tema()[beat.tipo]
     return estilo, f"{emoji} {pessoa} {beat.texto} ({beat.delta_s:+.1f}s)"

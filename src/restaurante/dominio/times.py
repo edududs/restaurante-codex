@@ -7,12 +7,12 @@ CODEX: SSoT das responsabilidades. Quem pega qual tarefa não é decidido por um
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 from restaurante.dominio.cardapio import Estacao
 
 
-class ModoExecucao(Enum):
+class ModoExecucao(StrEnum):
     """Como o time encara o trabalho (enviesa levemente o desempenho, no futuro)."""
 
     FOCADO = "focado"

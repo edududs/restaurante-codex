@@ -1,15 +1,12 @@
-"""Cardápio — a Fonte Única da Verdade dos itens e seus preços-base.
+"""Cardápio — os TIPOS puros de um item de cardápio (esqueleto, Parte I do Codex).
 
-CODEX: SSoT / Single Source of Truth (Parte I).
-
-    Cada *fato* ("o hambúrguer custa R$ 28,00 e sai da chapa") mora em UM lugar.
-    Todo o resto — o total do pedido, o preço com desconto de happy hour, o texto
-    do recibo — *deriva* daqui. Ninguém redigita o preço em outro lugar.
-
-    A pergunta que materializa o princípio: *"já não existe algo centralizado?"*.
-    Se o preço aparecesse também, digamos, hardcoded no serviço de pagamento, teríamos
-    duas fontes — e a divergência entre elas não seria um risco, seria uma certeza no
-    tempo. Aqui há uma fonte; o resto obedece e reflete.
+CODEX: PARSE, DON'T VALIDATE — o domínio só define a FORMA do fato (`ItemCardapio`,
+    `Estacao`, `Categoria`); os DADOS ("o hambúrguer custa R$ 28,00 e sai da chapa")
+    moram em `config/cardapio.json`, validados no boundary por
+    `config/modelos.py::CARDAPIO_ADAPTER` e carregados por
+    `config/carregador.py::carregar_cardapio()`. A fachada `config/catalogo.py::Cardapio`
+    expõe a mesma API de sempre (`buscar`/`todos`) — o domínio nunca importa pydantic,
+    só define o tipo que o boundary preenche.
 
 CODEX: Estação como enum ↔ Mechanism/Policy — a estação diz *onde* o prato é feito;
     a cozinha (mecanismo) só sabe agendar por estação, não conhece pratos específicos.
@@ -18,14 +15,19 @@ CODEX: Estação como enum ↔ Mechanism/Policy — a estação diz *onde* o pra
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 from restaurante.dominio.dinheiro import Dinheiro
-from restaurante.dominio.erros import ItemForaDoCardapio
 
 
-class Estacao(Enum):
-    """Onde, na cozinha, um item é preparado. Base para o paralelismo (asyncio)."""
+class Estacao(StrEnum):
+    """Onde, na cozinha, um item é preparado. Base para o paralelismo (asyncio).
+
+    CODEX: `StrEnum` (não `Enum` puro) — o `.value` já era string; herdar de
+        `StrEnum` faz o próprio membro se comportar como string no round-trip
+        JSON (o boundary em `config/` serializa/desserializa sem tradução manual).
+        Comparação por identidade (`estacao is Estacao.CHAPA`) continua válida.
+    """
 
     CHAPA = "chapa"
     FRITADEIRA = "fritadeira"
@@ -33,7 +35,7 @@ class Estacao(Enum):
     BAR = "bar"
 
 
-class Categoria(Enum):
+class Categoria(StrEnum):
     """Classe do item — usada por *políticas* de preço (ex.: happy hour em bebidas)."""
 
     PRATO = "prato"
@@ -50,40 +52,3 @@ class ItemCardapio:
     estacao: Estacao
     segundos_preparo: float
     categoria: Categoria
-
-
-# A FONTE. Um dicionário nome -> fato. Imutável na prática (não editamos em runtime).
-_ITENS: dict[str, ItemCardapio] = {
-    item.nome: item
-    for item in (
-        ItemCardapio("Hambúrguer", Dinheiro.de_reais(28), Estacao.CHAPA, 6.0, Categoria.PRATO),
-        ItemCardapio("Filé", Dinheiro.de_reais(52), Estacao.CHAPA, 9.0, Categoria.PRATO),
-        ItemCardapio(
-            "Batata frita", Dinheiro.de_reais(18), Estacao.FRITADEIRA, 4.0, Categoria.ACOMPANHAMENTO
-        ),
-        ItemCardapio(
-            "Onion rings", Dinheiro.de_reais(22), Estacao.FRITADEIRA, 5.0, Categoria.ACOMPANHAMENTO
-        ),
-        ItemCardapio("Salada Caesar", Dinheiro.de_reais(26), Estacao.SALADAS, 3.0, Categoria.PRATO),
-        ItemCardapio("Chopp", Dinheiro.de_reais(12), Estacao.BAR, 1.0, Categoria.BEBIDA),
-        ItemCardapio("Suco natural", Dinheiro.de_reais(14), Estacao.BAR, 2.0, Categoria.BEBIDA),
-    )
-}
-
-
-class Cardapio:
-    """Fachada de leitura da fonte. Esconde a estrutura interna (Information Hiding)."""
-
-    @staticmethod
-    def buscar(nome: str) -> ItemCardapio:
-        """Retorna o item ou falha alto se não existe (fail-fast, não retorna None)."""
-        item = _ITENS.get(nome)
-        if item is None:
-            disponiveis = ", ".join(sorted(_ITENS))
-            raise ItemForaDoCardapio(f"'{nome}' não está no cardápio. Temos: {disponiveis}.")
-        return item
-
-    @staticmethod
-    def todos() -> tuple[ItemCardapio, ...]:
-        """Projeção somente-leitura da fonte."""
-        return tuple(_ITENS.values())

@@ -9,7 +9,8 @@ import pytest
 from restaurante.adaptadores.apresentador_coletor import ApresentadorColetor
 from restaurante.adaptadores.relogio_fake import RelogioFake
 from restaurante.adaptadores.situacoes_sims import SituacoesSims
-from restaurante.dominio.cardapio import Cardapio, Estacao
+from restaurante.config.catalogo import Cardapio
+from restaurante.dominio.cardapio import Estacao
 from restaurante.dominio.pedido import NoLocal, Pedido
 from restaurante.dominio.pessoas import Personalidade, Pessoa
 from restaurante.dominio.times import Time

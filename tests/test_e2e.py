@@ -13,7 +13,7 @@ from restaurante.adaptadores.pagamento_fake import PagamentoFake
 from restaurante.adaptadores.precos import PrecoDeTabela, PrecoHappyHour
 from restaurante.adaptadores.repositorio_memoria import RepositorioMemoria
 from restaurante.app import montar_restaurante
-from restaurante.dominio.cardapio import Cardapio
+from restaurante.config.catalogo import Cardapio
 from restaurante.dominio.dinheiro import Dinheiro
 from restaurante.dominio.erros import PedidoVazio
 from restaurante.dominio.pedido import Delivery, EstadoPedido, NoLocal, ParaViagem, Pedido

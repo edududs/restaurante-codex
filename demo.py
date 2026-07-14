@@ -16,7 +16,8 @@ import time
 
 from restaurante.adaptadores.precos import PrecoDeTabela, PrecoHappyHour
 from restaurante.app import montar_restaurante
-from restaurante.dominio.cardapio import Cardapio, Estacao
+from restaurante.config.catalogo import Cardapio
+from restaurante.dominio.cardapio import Estacao
 from restaurante.dominio.erros import ErroDeDominio
 from restaurante.dominio.pedido import Delivery, NoLocal, ParaViagem, Pedido
 from restaurante.portas.precificacao import ContextoPreco
