@@ -4,7 +4,9 @@ version = "1.0.0"
 description = "Um restaurante que ensina engenharia de software — os princípios do Codex, na prática, com Python e asyncio."
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "rich>=15.0.0",
+]
 
 [dependency-groups]
 dev = ["pyright>=1.1.390", "pytest>=8.3.0", "pytest-asyncio>=0.24.0", "ruff>=0.15.0"]
@@ -53,12 +55,13 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 # Camada de apresentação/adaptadores pode imprimir — é o trabalho dela:
 "demo.py" = ["T201", "INP001"]
+"demo_sim.py" = ["T201", "INP001"]
 "src/restaurante/adaptadores/notificador_console.py" = ["T201"]
 # Testes: assert é a ferramenta, valores mágicos e sem-docstring são idiomáticos:
 "tests/*" = ["S101", "PLR2004", "D100", "D103", "ANN201", "INP001"]
 
 [tool.pyright]
-include = ["src", "tests", "demo.py"]
+include = ["src", "tests", "demo.py", "demo_sim.py"]
 pythonVersion = "3.13"
 typeCheckingMode = "strict"
 reportMissingTypeStubs = false
