@@ -52,6 +52,13 @@ trocável** — o motor não muda. Há dois:
 O motor é puro e determinístico (`planejar_turno`); Rich **e** Textual são só peles sobre
 a mesma porta. Detalhes em [`docs/07-simulacao-sims.md`](docs/07-simulacao-sims.md).
 
+**Tudo editável, sem tocar em Python.** Nomes, personagens, skills, cores e o cenário
+(seed, ritmo, pedidos) moram em [`config/*.json`](config/) — validados na borda por
+**Pydantic v2** (discriminated unions, `TypeAdapter`, validators cross-field,
+`pydantic-settings` com `env > arquivo > default`), mantendo o domínio puro. Edite um JSON
+(ou rode com `RESTAURANTE_SEED=7`) e veja o turno contar outra história. O "porquê" e o
+SOTA em [`docs/08-config-pydantic.md`](docs/08-config-pydantic.md).
+
 ---
 
 ## Por que um restaurante?
